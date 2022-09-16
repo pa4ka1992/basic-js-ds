@@ -61,44 +61,35 @@ class BinarySearchTree {
     }
   }
   remove(value) {
-    let nodeToRemove = this.find(value);
-    if (nodeToRemove === null) {
-      return null;
-    } else if (this.rootTree === 0) {
-      return null
-    }
-      return this.removeRightBranch(nodeToRemove)
-    }
-
-    removeRightBranch(level) {
-      if (level.leftChild === null && level.rightChild === null) {
-        level = null;
-      } else if (level.leftChild === null && level.rightChild !== null) {
-        level =  level.rightChild
-      } else if (level.leftChild !== null && level.rightChild === null) {
-        level =  level.leftChild
+    this.rootTree = removeInner.call(this, this.rootTree, value);
+    function removeInner(currentNode, value) {
+      if (!currentNode) {
+        return null;
+      } else if (currentNode.data > value) {
+        currentNode.leftChild = removeInner.call(this, currentNode.leftChild, value);
+        return currentNode;
+      } else if (currentNode.data < value) {
+        currentNode.rightChild = removeInner.call(this, currentNode.rightChild, value);
+        return currentNode;
       } else {
-        return this.removeRightBranch(level.rightChild)
+        if (!currentNode.leftChild && !currentNode.rightChild) {
+          return null;
+        }
+        if (!currentNode.leftChild) {
+          currentNode = currentNode.rightChild;
+          return currentNode
+        } else if (!currentNode.rightChild) {
+          currentNode = currentNode.leftChild;
+          return currentNode
+        } else {
+          let rightMin = this.min(currentNode.rightChild)
+          currentNode.data = rightMin
+          currentNode.rightChild = removeInner.call(this, currentNode.rightChild, rightMin)
+          return currentNode
+        } 
       }
-    }
-    //   let minValue = this.forRemoveMin(nodeToRemove)
-    //   if (nodeToRemove.data === minValue.data) {
-    //     nodeToRemove = null
-    //   } else {
-    //     nodeToRemove.data = minValue.data
-    //     minValue = null
-    //   }
-    // }
-    // forRemoveMin(level) {
-    //   if (level.leftChild === null && level.rightChild === null) {
-    //     return level
-    //   } else if (level.leftChild === null && level.rightChild !== null) {
-    //     return level.rightChild
-    //   } else if (level.leftChild !== null && level.rightChild === null) {
-    //     return level.leftChild
-    //   } else {
-    //     return this.forRemoveMin(level.rightChild);
-    //   }
+    }    
+  }
   min(level = this.rootTree) {
     if (level === null) {
       return null;
@@ -124,15 +115,11 @@ module.exports = {
 const tree = new BinarySearchTree();
 tree.add(9);
 tree.add(14);
+tree.add(54);
 tree.add(2);
 tree.add(6);
-tree.add(128);
 tree.add(8);
 tree.add(31);
-tree.add(54);
 tree.add(1);
-tree.remove(14);
-// tree.remove(8);
-// tree.remove(9);
-const a = tree.find(14);
-
+tree.remove(2);
+tree.min(2);
