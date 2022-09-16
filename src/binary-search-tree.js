@@ -66,23 +66,26 @@ class BinarySearchTree {
       if (!currentNode) {
         return null;
       } else if (currentNode.data > value) {
-        currentNode.rightChild = removeInner(currentNode.rightChild, value);
-        return currentNode;
-      } else if (currentNode.data < value) {
         currentNode.leftChild = removeInner(currentNode.leftChild, value);
         return currentNode;
+      } else if (currentNode.data < value) {
+        currentNode.rightChild = removeInner(currentNode.rightChild, value);
+        return currentNode;
       } else {
-        if (!currentNode.leftChild && !currentNode.leftChild) {
+        if (!currentNode.leftChild && !currentNode.rightChild) {
           return null;
         }
         if (!currentNode.leftChild) {
           currentNode = currentNode.rightChild;
+          return currentNode
         } else if (!currentNode.rightChild) {
           currentNode = currentNode.leftChild;
+          return currentNode
         } else {
           let rightMin = this.min(currentNode.rightChild)
           currentNode.data = this.min(currentNode.rightChild)
           currentNode.rightChild = removeInner(currentNode.rightChild, rightMin)
+          return currentNode
         } 
       }
     }    
